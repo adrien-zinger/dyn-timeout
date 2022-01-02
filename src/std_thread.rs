@@ -1,7 +1,10 @@
 ///! Implementation of the dynamic timeout with the std thread library
 use anyhow::{bail, Result};
 use std::{
-    sync::{Arc, Mutex, atomic::{AtomicBool, Ordering}},
+    sync::{
+        atomic::{AtomicBool, Ordering},
+        Arc, Mutex,
+    },
     thread::{self, JoinHandle},
     time::Duration,
 };
@@ -46,11 +49,13 @@ impl DynTimeout {
     }
     pub fn sub(&self, dur: Duration) -> Result<()> {
         let mut durations = match self.durations.lock() {
-            Ok(durations) => if durations.is_empty() {
-                bail!("Timeout already reached")
-            } else {
-                durations
-            },
+            Ok(durations) => {
+                if durations.is_empty() {
+                    bail!("Timeout already reached")
+                } else {
+                    durations
+                }
+            }
             Err(err) => bail!(err.to_string()),
         };
         let mut pop_dur = Duration::default();
@@ -66,7 +71,7 @@ impl DynTimeout {
         self.cancelled.store(true, Ordering::Relaxed);
         match self.durations.lock() {
             Ok(mut durations) => durations.clear(),
-            Err(err) => bail!(err.to_string())
+            Err(err) => bail!(err.to_string()),
         };
         self.join()
     }

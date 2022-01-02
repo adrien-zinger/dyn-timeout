@@ -1,10 +1,13 @@
 ///! Implementation of the dynamic timeout with the std thread library
 use anyhow::{bail, Result};
-use tokio::sync::Mutex;
 use std::{
-    sync::{Arc, atomic::{AtomicBool, Ordering}},
+    sync::{
+        atomic::{AtomicBool, Ordering},
+        Arc,
+    },
     time::Duration,
 };
+use tokio::sync::Mutex;
 
 type DurationVec = Arc<Mutex<Vec<Duration>>>;
 pub struct DynTimeout {

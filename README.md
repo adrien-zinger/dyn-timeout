@@ -36,20 +36,21 @@ rt.spawn(async {
    dyn_timeout.add(TWENTY).await.unwrap();
 });
 ```
----
+
 ## Contribute
 
 - All increases of the timelaps precision are welcome.
-- A system to cancel the timeout without waiting the last sleep (maybe using the crate [cancellable-timer](https://crates.io/crates/cancellable-timer))
-- Usage examples, documentation, typo and comments, unit tests
+- A system to cancel the timeout without waiting the last sleep (maybe using the crate [cancellable-timer](https://crates.io/crates/cancellable-timer)).
+- Usage examples, documentation, typo and comments, unit tests.
+- All interestings ideas
 
 All development contribution, please, has to pass the currents unit tests and should include a new test.
 
+---
 #### License GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
 
-<sub>
-Unless you explicitly state otherwise, any contribution intentionally submitted
-for inclusion in this crate by you...
 
-This lirary is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-</sub>
+<sub>Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion in this crate by you...
+
+<sub>This lirary is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+

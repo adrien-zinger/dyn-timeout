@@ -21,7 +21,9 @@ mod test {
     #[bench]
     fn simple_bench(b: &mut Bencher) {
         b.iter(|| {
-            std_thread::DynTimeout::new(TWENTY, || {}).add(TWENTY).unwrap();
+            std_thread::DynTimeout::new(TWENTY, || {})
+                .add(TWENTY)
+                .unwrap();
         });
     }
     #[tokio::test]

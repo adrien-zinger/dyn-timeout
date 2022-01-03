@@ -19,7 +19,7 @@ type DurationVec = Arc<Mutex<Vec<Duration>>>;
 /// use std::time::Duration;
 /// const TWENTY: Duration = Duration::from_millis(20);
 ///
-/// let mut rt = Runtime::new().unwrap(); 
+/// let mut rt = Runtime::new().unwrap();
 /// rt.spawn(async {
 ///    let dyn_timeout = DynTimeout::new(TWENTY, || {
 ///        println!("after forty milliseconds");
@@ -35,7 +35,7 @@ pub struct DynTimeout {
 impl DynTimeout {
     /// Create a new dynamic timeout in a new thread. Execute the callback
     /// function in the separated thread after a given duration.
-    /// 
+    ///
     /// # Example
     /// ```
     /// use tokio::runtime::Runtime;
@@ -43,7 +43,7 @@ impl DynTimeout {
     /// use std::time::Duration;
     /// const TWENTY: Duration = Duration::from_millis(20);
     ///
-    /// let mut rt = Runtime::new().unwrap(); 
+    /// let mut rt = Runtime::new().unwrap();
     /// rt.spawn(async {
     ///    let dyn_timeout = DynTimeout::new(TWENTY, || {
     ///        println!("after forty milliseconds");
@@ -70,11 +70,11 @@ impl DynTimeout {
         }
     }
     /// Increase the delay before the timeout.
-    /// 
+    ///
     /// # Return
     /// Return a result with an error if the timeout already appened.
     /// Otherwise it return an empty success.
-    /// 
+    ///
     /// # Example
     /// ```
     /// use tokio::runtime::Runtime;
@@ -82,7 +82,7 @@ impl DynTimeout {
     /// use std::time::Duration;
     /// const TWENTY: Duration = Duration::from_millis(20);
     ///
-    /// let mut rt = Runtime::new().unwrap(); 
+    /// let mut rt = Runtime::new().unwrap();
     /// rt.spawn(async {
     ///    let dyn_timeout = DynTimeout::new(TWENTY, || {
     ///        println!("after some milliseconds");
@@ -99,21 +99,21 @@ impl DynTimeout {
         Ok(())
     }
     /// Try to decrease the delay before the timeout. (work in progress)
-    /// 
+    ///
     /// # Return
     /// Return a result with an error if the timeout already appened.
     /// Otherwise it return an empty success.
-    /// 
+    ///
     /// # Example
     /// ```
     /// use tokio::runtime::Runtime;
     /// use dyn_timeout::tokio_impl::DynTimeout;
     /// use std::time::Duration;
-    /// 
+    ///
     /// const TWENTY: Duration = Duration::from_millis(20);
     /// const TEN: Duration = Duration::from_millis(10);
     ///
-    /// let mut rt = Runtime::new().unwrap(); 
+    /// let mut rt = Runtime::new().unwrap();
     /// rt.spawn(async {
     ///    let dyn_timeout = DynTimeout::new(TWENTY, || {
     ///        println!("after some milliseconds");
@@ -138,21 +138,21 @@ impl DynTimeout {
         Ok(())
     }
     /// Dismiss the timeout callback
-    /// 
+    ///
     /// # Return
     /// Return a result with an error if the timeout already appened.
     /// Otherwise it return an empty success.
-    /// 
+    ///
     /// # Example
     /// ```
     /// use tokio::runtime::Runtime;
     /// use dyn_timeout::tokio_impl::DynTimeout;
     /// use std::time::Duration;
-    /// 
+    ///
     /// const TWENTY: Duration = Duration::from_millis(20);
     /// const TEN: Duration = Duration::from_millis(10);
     ///
-    /// let mut rt = Runtime::new().unwrap(); 
+    /// let mut rt = Runtime::new().unwrap();
     /// rt.spawn(async {
     ///    let mut dyn_timeout = DynTimeout::new(TWENTY, || {
     ///        println!("never append");

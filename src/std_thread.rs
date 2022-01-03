@@ -17,14 +17,14 @@ type DurationVec = Arc<Mutex<Vec<Duration>>>;
 /// ```
 /// use std::time::Duration;
 /// use dyn_timeout::std_thread::DynTimeout;
-/// 
+///
 /// const TWENTY: Duration = Duration::from_millis(20);
-/// 
+///
 /// let dyn_timeout = DynTimeout::new(TWENTY, || {
 ///    println!("after forty milliseconds");
 /// });
 /// dyn_timeout.add(TWENTY).unwrap();
-/// ``` 
+/// ```
 pub struct DynTimeout {
     thread: Option<JoinHandle<()>>,
     cancelled: Arc<AtomicBool>,
@@ -36,19 +36,19 @@ impl DynTimeout {
     /// function in the separated thread after a given duration.
     /// The created thread join automatically on drop timeout without dismiss
     /// the callback execution.
-    /// 
+    ///
     /// # Example
     /// ```
     /// use std::time::Duration;
     /// use dyn_timeout::std_thread::DynTimeout;
-    /// 
+    ///
     /// const TWENTY: Duration = Duration::from_millis(20);
-    /// 
+    ///
     /// let dyn_timeout = DynTimeout::new(TWENTY, || {
     ///    println!("after forty milliseconds");
     /// });
     /// dyn_timeout.add(TWENTY).unwrap();
-    /// ``` 
+    /// ```
     pub fn new(dur: Duration, callback: fn() -> ()) -> Self {
         let durations: DurationVec = Arc::new(Mutex::new(vec![Duration::ZERO, dur]));
         let thread_vec = durations.clone();
@@ -68,17 +68,17 @@ impl DynTimeout {
         }
     }
     /// Increase the delay before the timeout.
-    /// 
+    ///
     /// # Return
     /// Return a result with an error if the timeout already appened or it failed
     /// to increase the delay for any other reason.
     /// Otherwise it return an empty success.
-    /// 
+    ///
     /// # Example
     /// ```
     /// use std::time::Duration;
     /// use dyn_timeout::std_thread::DynTimeout;
-    /// 
+    ///
     /// const TWENTY: Duration = Duration::from_millis(20);
     /// let dyn_timeout = DynTimeout::new(TWENTY, || {
     ///    println!("after forty milliseconds");
@@ -98,20 +98,20 @@ impl DynTimeout {
         }
     }
     /// Try to decrease the delay before the timeout. (work in progress)
-    /// 
+    ///
     /// # Return
     /// Return a result with an error if the timeout already appened or it failed
     /// to decrease the delay for any other reason.
     /// Otherwise it return an empty success.
-    /// 
+    ///
     /// # Example
     /// ```
     /// use std::time::Duration;
     /// use dyn_timeout::std_thread::DynTimeout;
-    /// 
+    ///
     /// const TWENTY: Duration = Duration::from_millis(20);
     /// const TEN: Duration = Duration::from_millis(10);
-    /// 
+    ///
     /// let dyn_timeout = DynTimeout::new(TWENTY, || {
     ///    println!("after some milliseconds");
     /// });
@@ -142,20 +142,20 @@ impl DynTimeout {
     /// Dismiss the timeout callback and cancel all delays added.
     /// Join the created thread. (Note: we're
     /// currently working on a fast cancellation of all the delays)
-    /// 
+    ///
     /// # Return
     /// Return a result with an error if the timeout if the program failed to
     /// clear the delays.
     /// Otherwise it return an empty success.
-    /// 
+    ///
     /// # Example
     /// ```
     /// use std::time::Duration;
     /// use dyn_timeout::std_thread::DynTimeout;
-    /// 
+    ///
     /// const TWENTY: Duration = Duration::from_millis(20);
     /// const TEN: Duration = Duration::from_millis(10);
-    /// 
+    ///
     /// let mut dyn_timeout = DynTimeout::new(TWENTY, || {
     ///    println!("never append");
     /// });
@@ -168,7 +168,7 @@ impl DynTimeout {
             Ok(mut durations) => {
                 self.cancelled.store(true, Ordering::Relaxed);
                 durations.clear()
-            },
+            }
             Err(err) => bail!(err.to_string()),
         };
         self.join()?;

@@ -6,6 +6,8 @@ edition = "2021"
 license-file = "LICENSE"
 readme = "README.md"
 repository = "https://github.com/adrien-zinger/dyn-timeout"
+description = "Dynamic timeout, cancel, add and remove time before a callback execution"
+keywords = ["tokio", "raft", "timeout", "timer", "cancellable"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

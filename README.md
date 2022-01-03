@@ -1,3 +1,5 @@
+[![CI](https://github.com/adrien-zinger/dyn-timeout/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/adrien-zinger/dyn-timeout/actions/workflows/ci.yml?query=branch%3Amain)
+
 # Dynamic Timeout
 
 Execute a function after a mutable duration.

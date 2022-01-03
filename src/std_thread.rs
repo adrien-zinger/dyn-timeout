@@ -21,7 +21,7 @@ type DurationVec = Arc<Mutex<Vec<Duration>>>;
 /// const TWENTY: Duration = Duration::from_millis(20);
 /// 
 /// let dyn_timeout = DynTimeout::new(TWENTY, || {
-///    println!("after twenty nano second");
+///    println!("after forty milliseconds");
 /// });
 /// dyn_timeout.add(TWENTY).unwrap();
 /// ``` 
@@ -45,7 +45,7 @@ impl DynTimeout {
     /// const TWENTY: Duration = Duration::from_millis(20);
     /// 
     /// let dyn_timeout = DynTimeout::new(TWENTY, || {
-    ///    println!("after twenty nano second");
+    ///    println!("after forty milliseconds");
     /// });
     /// dyn_timeout.add(TWENTY).unwrap();
     /// ``` 
@@ -81,7 +81,7 @@ impl DynTimeout {
     /// 
     /// const TWENTY: Duration = Duration::from_millis(20);
     /// let dyn_timeout = DynTimeout::new(TWENTY, || {
-    ///    println!("after twenty nano second");
+    ///    println!("after forty milliseconds");
     /// });
     /// dyn_timeout.add(TWENTY).unwrap();
     /// ```
@@ -113,7 +113,7 @@ impl DynTimeout {
     /// const TEN: Duration = Duration::from_millis(10);
     /// 
     /// let dyn_timeout = DynTimeout::new(TWENTY, || {
-    ///    println!("after twenty nano second");
+    ///    println!("after some milliseconds");
     /// });
     /// dyn_timeout.add(TEN).unwrap();
     /// dyn_timeout.add(TWENTY).unwrap();
@@ -160,6 +160,7 @@ impl DynTimeout {
     ///    println!("never append");
     /// });
     /// dyn_timeout.add(TEN).unwrap();
+    /// // cancel the last ten milliseconds and dismiss the callback
     /// dyn_timeout.cancel().unwrap();
     /// ```
     pub fn cancel(&mut self) -> Result<()> {

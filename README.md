@@ -9,7 +9,7 @@ use dyn_timeout::std_thread::DynTimeout;
 const TWENTY: Duration = Duration::from_millis(20);
 
 let dyn_timeout = DynTimeout::new(TWENTY, || {
-   println!("after twenty nano second");
+   println!("after forty milliseconds");
 });
 dyn_timeout.add(TWENTY).unwrap();
 // .sub...
@@ -31,7 +31,7 @@ const TWENTY: Duration = Duration::from_millis(20);
 let mut rt = Runtime::new().unwrap(); 
 rt.spawn(async {
    let dyn_timeout = DynTimeout::new(TWENTY, || {
-       println!("after twenty nano second");
+       println!("after forty milliseconds");
    });
    dyn_timeout.add(TWENTY).await.unwrap();
 });

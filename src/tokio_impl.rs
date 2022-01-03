@@ -22,7 +22,7 @@ type DurationVec = Arc<Mutex<Vec<Duration>>>;
 /// let mut rt = Runtime::new().unwrap(); 
 /// rt.spawn(async {
 ///    let dyn_timeout = DynTimeout::new(TWENTY, || {
-///        println!("after twenty nano second");
+///        println!("after forty milliseconds");
 ///    });
 ///    dyn_timeout.add(TWENTY).await.unwrap();
 /// });
@@ -46,7 +46,7 @@ impl DynTimeout {
     /// let mut rt = Runtime::new().unwrap(); 
     /// rt.spawn(async {
     ///    let dyn_timeout = DynTimeout::new(TWENTY, || {
-    ///        println!("after twenty milli second");
+    ///        println!("after forty milliseconds");
     ///    });
     ///    dyn_timeout.add(TWENTY).await.unwrap();
     /// });
@@ -85,7 +85,7 @@ impl DynTimeout {
     /// let mut rt = Runtime::new().unwrap(); 
     /// rt.spawn(async {
     ///    let dyn_timeout = DynTimeout::new(TWENTY, || {
-    ///        println!("after some milli seconds");
+    ///        println!("after some milliseconds");
     ///    });
     ///    dyn_timeout.add(TWENTY).await.unwrap();
     /// });
@@ -116,7 +116,7 @@ impl DynTimeout {
     /// let mut rt = Runtime::new().unwrap(); 
     /// rt.spawn(async {
     ///    let dyn_timeout = DynTimeout::new(TWENTY, || {
-    ///        println!("after some milli second");
+    ///        println!("after some milliseconds");
     ///    });
     ///    dyn_timeout.add(TEN).await.unwrap();
     ///    dyn_timeout.add(TWENTY).await.unwrap();

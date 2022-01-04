@@ -100,7 +100,7 @@ impl DynTimeout {
             Err(err) => bail!(err.to_string()),
         }
     }
-    /// Try to decrease the delay before the timeout. (work in progress)
+    /// Try to decrease the delay before the timeout. (bad precision, work in progress)
     ///
     /// # Return
     /// Return a result with an error if the timeout already appened or it failed
@@ -143,8 +143,7 @@ impl DynTimeout {
         Ok(())
     }
     /// Dismiss the timeout callback and cancel all delays added.
-    /// Join the created thread. (Note: we're
-    /// currently working on a fast cancellation of all the delays)
+    /// Stop immediatelly all waiting process and join the created thread.
     ///
     /// # Return
     /// Return a result with an error if the timeout if the program failed to

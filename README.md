@@ -41,18 +41,15 @@ rt.spawn(async {
 
 ## Contribute
 
-- All increases of the timelaps precision are welcome.
-- A system to cancel the timeout without waiting the last sleep (maybe using the crate [cancellable-timer](https://crates.io/crates/cancellable-timer)).
+- All increases of the timelaps precision and code architecture are welcomes.
 - Usage examples, documentation, typo and comments, unit tests.
-- All interestings ideas
+- All interestings ideas are also good to know in an issue.
+- Give your feedback, report errors and bugs in a github issue.
 
-All development contribution, please, has to pass the currents unit tests and should include a new test.
+All development contribution, please, has to pass the currents unit tests and it's a must to include a new test!
 
 ---
 #### License GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
-
-
-<sub>Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion in this crate by you...
 
 <sub>This lirary is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 

@@ -109,7 +109,7 @@ impl DynTimeout {
         durations.push(dur);
         Ok(())
     }
-    /// Try to decrease the delay before the timeout. (work in progress)
+    /// Try to decrease the delay before the timeout. (bad precision, work in progress)
     ///
     /// # Return
     /// Return a result with an error if the timeout already appened.
@@ -148,7 +148,8 @@ impl DynTimeout {
         }
         Ok(())
     }
-    /// Dismiss the timeout callback
+    /// Dismiss the timeout callback and cancel all delays added.
+    /// Stop immediatelly all waiting process and join the created thread.
     ///
     /// # Return
     /// Return a result with an error if the timeout already appened.
@@ -179,6 +180,7 @@ impl DynTimeout {
         Ok(())
     }
 
+    /// Wait for the end of the timeout
     pub async fn wait(&mut self) -> Result<()> {
         self.receiver.recv().await;
         Ok(())

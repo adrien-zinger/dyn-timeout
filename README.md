@@ -41,7 +41,7 @@ rt.spawn(async {
 
 ## Contribute
 
-- All increases of the timelaps precision and code architecture are welcomes.
+- All increases of the time precision and code architecture are welcomes.
 - Usage examples, documentation, typo and comments, unit tests.
 - All interestings ideas are also good to know in an issue.
 - Give your feedback, report errors and bugs in a github issue.

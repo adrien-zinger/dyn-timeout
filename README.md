@@ -39,6 +39,14 @@ rt.spawn(async {
 });
 ```
 
+## Benchmark
+
+Here is the bench with 40 milliseconds to wait with the standard implementation, under the nanoseconds the time precision decrease. (Using tokio decrease also the precision)
+
+```bash
+test test::simple_bench ... bench:  40,641,475 ns/iter (+/- 68,064)
+```
+
 ## Contribute
 
 - All increases of the time precision and code architecture are welcomes.

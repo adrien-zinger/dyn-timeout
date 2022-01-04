@@ -14,4 +14,7 @@ keywords = ["tokio", "raft", "timeout", "timer", "cancellable"]
 [dependencies]
 lazy_static = "1"
 anyhow = "1"
-tokio = { version = "1.15.0", features = ["full", "macros"] }
+tokio = { version = "1.15.0", features = ["full"] }
+
+[dev-dependencies]
+lazy_static = "1"

@@ -3,7 +3,7 @@ use anyhow::{bail, Result};
 use std::{
     sync::{
         atomic::{AtomicBool, Ordering},
-        Arc, Mutex,
+        mpsc, Arc, Mutex,
     },
     thread::{self, JoinHandle},
     time::Duration,
@@ -28,6 +28,7 @@ type DurationVec = Arc<Mutex<Vec<Duration>>>;
 pub struct DynTimeout {
     thread: Option<JoinHandle<()>>,
     cancelled: Arc<AtomicBool>,
+    sender: mpsc::Sender<()>,
     durations: DurationVec,
 }
 
@@ -54,16 +55,18 @@ impl DynTimeout {
         let thread_vec = durations.clone();
         let cancelled = Arc::new(AtomicBool::new(false));
         let thread_cancelled = cancelled.clone();
+        let (sender, receiver) = mpsc::channel::<()>();
         Self {
             thread: Some(thread::spawn(move || {
                 while let Some(dur) = thread_vec.lock().unwrap().pop() {
-                    thread::sleep(dur)
+                    let _ = receiver.recv_timeout(dur);
                 }
-                if thread_cancelled.load(Ordering::Relaxed) {
+                if !thread_cancelled.load(Ordering::Relaxed) {
                     callback();
                 }
             })),
             cancelled,
+            sender,
             durations,
         }
     }
@@ -166,8 +169,9 @@ impl DynTimeout {
     pub fn cancel(&mut self) -> Result<()> {
         match self.durations.lock() {
             Ok(mut durations) => {
-                self.cancelled.store(true, Ordering::Relaxed);
-                durations.clear()
+                self.cancelled.store(true, Ordering::Release);
+                durations.clear();
+                self.sender.send(())?;
             }
             Err(err) => bail!(err.to_string()),
         };
@@ -181,10 +185,13 @@ impl DynTimeout {
         }
         match self.thread.take() {
             Some(thread) => match thread.join() {
-                Ok(_) => Ok(()),
+                Ok(_) => {
+                    self.thread = None;
+                    Ok(())
+                },
                 Err(_) => bail!("Cannot join dyn-timeout"),
             },
-            None => bail!("Cannot join dyn-timeout"),
+            None => bail!("Cannot take thread"),
         }
     }
 }

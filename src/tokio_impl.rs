@@ -7,7 +7,7 @@ use std::{
     },
     time::Duration,
 };
-use tokio::sync::Mutex;
+use tokio::{sync::{Mutex, mpsc}, task::JoinHandle};
 
 type DurationVec = Arc<Mutex<Vec<Duration>>>;
 
@@ -30,6 +30,9 @@ type DurationVec = Arc<Mutex<Vec<Duration>>>;
 pub struct DynTimeout {
     cancelled: Arc<AtomicBool>,
     durations: DurationVec,
+    sender: mpsc::Sender<()>,
+    thread: Option<JoinHandle<()>>,
+    receiver: mpsc::Receiver<()>,
 }
 
 impl DynTimeout {
@@ -56,17 +59,25 @@ impl DynTimeout {
         let thread_vec = durations.clone();
         let cancelled = Arc::new(AtomicBool::new(false));
         let thread_cancelled = cancelled.clone();
-        tokio::task::spawn(async move {
-            while let Some(dur) = thread_vec.lock().await.pop() {
-                tokio::time::sleep(dur).await
-            }
-            if thread_cancelled.load(Ordering::Relaxed) {
-                callback();
-            }
-        });
+        let (sender, mut receiver) = mpsc::channel::<()>(1);
+        let (tx, rx) = mpsc::channel::<()>(1);
         Self {
             cancelled,
             durations,
+            sender,
+            receiver: rx,
+            thread: Some(tokio::task::spawn(async move {
+                while let Some(dur) = thread_vec.lock().await.pop() {
+                    let _ = tokio::time::timeout(dur, async {
+                        receiver.recv().await
+                    }).await;
+                }
+                if !thread_cancelled.load(Ordering::Relaxed) {
+                    //println!("hey");
+                    callback();
+                }
+                tx.send(()).await.unwrap();
+            })),
         }
     }
     /// Increase the delay before the timeout.
@@ -163,6 +174,13 @@ impl DynTimeout {
     pub async fn cancel(&mut self) -> Result<()> {
         self.cancelled.store(true, Ordering::Relaxed);
         self.durations.lock().await.clear();
-        Ok(()) // keep API similar with std tread
+        self.sender.send(()).await?;
+        self.thread = None;
+        Ok(())
+    }
+
+    pub async fn wait(&mut self) -> Result<()> {
+        self.receiver.recv().await;
+        Ok(())
     }
 }

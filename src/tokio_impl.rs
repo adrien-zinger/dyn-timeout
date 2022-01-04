@@ -7,7 +7,10 @@ use std::{
     },
     time::Duration,
 };
-use tokio::{sync::{Mutex, mpsc}, task::JoinHandle};
+use tokio::{
+    sync::{mpsc, Mutex},
+    task::JoinHandle,
+};
 
 type DurationVec = Arc<Mutex<Vec<Duration>>>;
 
@@ -68,9 +71,7 @@ impl DynTimeout {
             receiver: rx,
             thread: Some(tokio::task::spawn(async move {
                 while let Some(dur) = thread_vec.lock().await.pop() {
-                    let _ = tokio::time::timeout(dur, async {
-                        receiver.recv().await
-                    }).await;
+                    let _ = tokio::time::timeout(dur, async { receiver.recv().await }).await;
                 }
                 if !thread_cancelled.load(Ordering::Relaxed) {
                     //println!("hey");

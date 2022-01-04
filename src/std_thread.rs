@@ -187,7 +187,7 @@ impl DynTimeout {
                 Ok(_) => {
                     self.thread = None;
                     Ok(())
-                },
+                }
                 Err(_) => bail!("Cannot join dyn-timeout"),
             },
             None => bail!("Cannot take thread"),

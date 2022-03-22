@@ -1,13 +1,12 @@
-#![feature(test)]
 pub mod std_thread;
 pub mod tokio_impl;
 
 #[cfg(test)]
 mod test {
-    extern crate test;
+    //extern crate test;
     use std::sync::{Arc, Mutex};
     use std::time::{Duration, SystemTime};
-    use test::Bencher;
+    //use test::Bencher;
     const TWENTY: Duration = Duration::from_millis(20);
     use crate::std_thread;
     use crate::tokio_impl;
@@ -28,14 +27,14 @@ mod test {
         // this should be cancelled
         dyn_timeout.cancel().unwrap();
     }
-    #[bench]
-    fn simple_bench(b: &mut Bencher) {
-        b.iter(|| {
-            std_thread::DynTimeout::new(TWENTY, || {})
-                .add(TWENTY)
-                .unwrap();
-        });
-    }
+    //#[bench]
+    //fn simple_bench(b: &mut Bencher) {
+    //    b.iter(|| {
+    //        std_thread::DynTimeout::new(TWENTY, || {})
+    //            .add(TWENTY)
+    //            .unwrap();
+    //    });
+    //}
     #[tokio::test]
     async fn tokio_test() {
         let dyn_timeout = tokio_impl::DynTimeout::new(TWENTY, || {

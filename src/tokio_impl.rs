@@ -8,7 +8,10 @@ use std::{
     time::Duration,
 };
 use tokio::{
-    sync::{mpsc, Mutex},
+    sync::{
+        mpsc::{self, Sender},
+        Mutex,
+    },
     task::JoinHandle,
 };
 
@@ -76,6 +79,48 @@ impl DynTimeout {
                 if !thread_cancelled.load(Ordering::Relaxed) {
                     //println!("hey");
                     callback();
+                }
+                tx.send(()).await.unwrap();
+            })),
+        }
+    }
+    /// Create a new dynamic timeout in a new thread. Call the mpsc sender on
+    /// timeout reached.
+    ///
+    /// # Example
+    /// ```
+    /// use tokio::runtime::Runtime;
+    /// use dyn_timeout::tokio_impl::DynTimeout;
+    /// use std::time::Duration;
+    /// const TWENTY: Duration = Duration::from_millis(20);
+    ///
+    /// let mut rt = Runtime::new().unwrap();
+    /// rt.spawn(async {
+    ///    let (sender, mut receiver) = tokio::sync::mpsc::channel::<()>(1);
+    ///    let dyn_timeout = DynTimeout::with_sender(TWENTY, sender);
+    ///    tokio::select! {
+    ///     _ = receiver.recv() => println!("Timeout!")
+    ///    }
+    /// });
+    /// ```
+    pub fn with_sender(dur: Duration, sender_in: Sender<()>) -> Self {
+        let durations: DurationVec = Arc::new(Mutex::new(vec![Duration::ZERO, dur]));
+        let thread_vec = durations.clone();
+        let cancelled = Arc::new(AtomicBool::new(false));
+        let thread_cancelled = cancelled.clone();
+        let (sender, mut receiver) = mpsc::channel::<()>(1);
+        let (tx, rx) = mpsc::channel::<()>(1);
+        Self {
+            cancelled,
+            durations,
+            sender,
+            receiver: rx,
+            thread: Some(tokio::task::spawn(async move {
+                while let Some(dur) = thread_vec.lock().await.pop() {
+                    let _ = tokio::time::timeout(dur, async { receiver.recv().await }).await;
+                }
+                if !thread_cancelled.load(Ordering::Relaxed) {
+                    sender_in.send(()).await.unwrap();
                 }
                 tx.send(()).await.unwrap();
             })),

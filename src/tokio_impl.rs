@@ -39,6 +39,7 @@ pub struct DynTimeout {
     sender: mpsc::Sender<()>,
     thread: Option<JoinHandle<()>>,
     receiver: mpsc::Receiver<()>,
+    max_waiting_time: Option<Duration>,
 }
 
 impl DynTimeout {
@@ -82,6 +83,7 @@ impl DynTimeout {
                 }
                 tx.send(()).await.unwrap();
             })),
+            max_waiting_time: None,
         }
     }
     /// Create a new dynamic timeout in a new thread. Call the mpsc sender on
@@ -124,7 +126,12 @@ impl DynTimeout {
                 }
                 tx.send(()).await.unwrap();
             })),
+            max_waiting_time: None,
         }
+    }
+    /// Set a muximum time we can wait, dismiss the `add` call if overflow.
+    pub fn set_max_waiting_time(&mut self, duration: Duration) {
+        self.max_waiting_time = Some(duration)
     }
     /// Increase the delay before the timeout.
     ///
@@ -151,6 +158,15 @@ impl DynTimeout {
         let mut durations = self.durations.lock().await;
         if durations.is_empty() {
             bail!("Timeout already reached")
+        }
+        if let Some(m) = self.max_waiting_time {
+            let mut tt = Duration::from_millis(0);
+            for d in durations.iter() {
+                tt += *d;
+            }
+            if tt >= m {
+                return Ok(());
+            }
         }
         durations.push(dur);
         Ok(())

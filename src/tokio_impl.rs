@@ -74,7 +74,13 @@ impl DynTimeout {
             sender,
             receiver: rx,
             thread: Some(tokio::task::spawn(async move {
-                while let Some(dur) = thread_vec.lock().await.pop() {
+                loop {
+                    let dur = {
+                        match thread_vec.lock().await.pop() {
+                            Some(dur) => dur,
+                            None => break,
+                        }
+                    };
                     let _ = tokio::time::timeout(dur, async { receiver.recv().await }).await;
                 }
                 if !thread_cancelled.load(Ordering::Relaxed) {
@@ -118,7 +124,13 @@ impl DynTimeout {
             sender,
             receiver: rx,
             thread: Some(tokio::task::spawn(async move {
-                while let Some(dur) = thread_vec.lock().await.pop() {
+                loop {
+                    let dur = {
+                        match thread_vec.lock().await.pop() {
+                            Some(dur) => dur,
+                            None => break,
+                        }
+                    };
                     let _ = tokio::time::timeout(dur, async { receiver.recv().await }).await;
                 }
                 if !thread_cancelled.load(Ordering::Relaxed) {
